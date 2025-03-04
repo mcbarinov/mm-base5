@@ -1,0 +1,71 @@
+{% extends "inc/base.j2" %}
+{% block content %}
+
+  <div>
+    <h3>data</h3>
+    {#    {{ inline_form(form, submit="filter") }}#}
+
+    <nav>
+      <ul>
+        <li><a href="/api-post/data/generate">generate</a></li>
+        <li><a href="/upload">upload</a></li>
+        <li><a href="/api/data/exception">raise exception</a></li>
+      </ul>
+    </nav>
+
+
+  </div>
+
+  <table class="sortable">
+    <thead>
+    <tr class="sticky-top">
+      <th>created_at</th>
+      <th>status</th>
+      <th>value</th>
+      <th>inc</th>
+      <th>actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for d in data_list %}
+      <tr>
+        <td>{{ d.created_at | dt }}</td>
+        <td>{{ d.status | data_status }}</td>
+        <td>{{ d.value | n }}</td>
+        <td>
+          <button data-target="modal-inc-{{ d.id }}" onclick="toggleModal(event)">inc</button>
+          <dialog id="modal-inc-{{ d.id }}">
+            <article>
+              <header>
+                <button
+                  aria-label="Close"
+                  rel="prev"
+                  data-target="modal-inc-{{ d.id }}"
+                  onclick="toggleModal(event)"
+                ></button>
+                <h3>Confirm your action!</h3>
+              </header>
+              <form method="post" action="/inc-data/{{ d.id }}">
+                <input type="number" name="value" value="1">
+                <input type="submit" value="inc">
+              </form>
+            </article>
+          </dialog>
+        </td>
+        <td>
+          <details class="dropdown">
+            <summary>actions</summary>
+            <ul>
+              <li><a href="/api-post/data/{{ d.id }}/inc?value=2">inc</a></li>
+              <li><a href="/api-delete/data/{{ d.id }}" onclick="return confirm('sure?')">delete</a></li>
+              <li><a href="/api/data/{{ d.id }}">view</a></li>
+            </ul>
+          </details>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+
+{% endblock %}
