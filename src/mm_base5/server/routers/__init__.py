@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from mm_base5.server.routers import dconfigs, ui
+from mm_base5.server.routers import dconfig_router, ui_router
 
 base_router = APIRouter()
-base_router.include_router(ui.router)
-base_router.include_router(dconfigs.router)
+base_router.include_router(ui_router.router)
+base_router.include_router(dconfig_router.router)

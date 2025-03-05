@@ -9,7 +9,7 @@ from markupsafe import Markup
 from mm_mongo import json_dumps
 from starlette.responses import HTMLResponse
 
-from mm_base5.core.core import BaseCore, DB_co, DCONFIG_co, DVALUE_co
+from mm_base5.core.core import BaseCoreAny
 from mm_base5.server import utils
 from mm_base5.server.config import BaseServerConfig
 
@@ -32,9 +32,7 @@ class CustomJinja:
     globals: dict[str, Any] | None = None
 
 
-def init_jinja_environment(
-    core: BaseCore[DCONFIG_co, DVALUE_co, DB_co], server_config: BaseServerConfig, custom_jinja: CustomJinja
-) -> Environment:
+def init_env(core: BaseCoreAny, server_config: BaseServerConfig, custom_jinja: CustomJinja) -> Environment:
     loader = ChoiceLoader([PackageLoader("mm_base5.server"), PackageLoader("app.server")])
 
     header_info = custom_jinja.header_info if custom_jinja.header_info else lambda _: Markup("")
@@ -62,8 +60,8 @@ def init_jinja_environment(
 
 
 class Template:
-    def __init__(self, env: Environment) -> None:
-        self.env = env
+    def __init__(self, core: BaseCoreAny, server_config: BaseServerConfig, custom_jinja: CustomJinja) -> None:
+        self.env = init_env(core, server_config, custom_jinja)
 
     def render(self, template_name: str, **kwargs: object) -> HTMLResponse:
         html_content = self.env.get_template(template_name).render(kwargs)
