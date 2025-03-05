@@ -4,13 +4,12 @@ from bson import ObjectId
 from mm_mongo import MongoInsertManyResult, MongoInsertOneResult
 from mm_std import hr
 
-from app.core.db import Data, DataStatus, Db
-from app.settings import DConfigSettings, DValueSettings
-from mm_base5 import BaseService, BaseServiceParams
+from app.core.db import Data, DataStatus
+from app.core.types_ import AppService, AppServiceParams
 
 
-class DataService(BaseService[DConfigSettings, DValueSettings, Db]):
-    def __init__(self, base_params: BaseServiceParams[DConfigSettings, DValueSettings, Db]) -> None:
+class DataService(AppService):
+    def __init__(self, base_params: AppServiceParams) -> None:
         super().__init__(base_params)
 
     def generate_data(self) -> MongoInsertOneResult[ObjectId]:

@@ -21,6 +21,11 @@ def data_page(tpl: TemplateDep, core: CoreDep) -> HTMLResponse:
     return tpl.render("data.j2", data_list=data)
 
 
+@router.get("/misc")
+def misc_page(tpl: TemplateDep) -> HTMLResponse:
+    return tpl.render("misc.j2", zero=0)
+
+
 # ACTIONS
 @router.post("/data/{id}/inc")
 def inc_data(core: CoreDep, id: ObjectId, value: Annotated[int, Form()]) -> RedirectResponse:
