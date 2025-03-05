@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import threading
+from datetime import datetime
 from logging import Logger
 
 import pydash
@@ -19,11 +22,26 @@ class Stats(BaseModel):
         daemon: bool
         func_name: str | None
 
+    class Job(BaseModel):
+        func: str
+        interval: int
+        is_running: bool
+        last_at: datetime
+
+        @classmethod
+        def from_scheduler_job(cls, job: Scheduler.Job) -> Stats.Job:
+            return cls(
+                func=job.func.__qualname__,
+                interval=job.interval,
+                is_running=job.is_running,
+                last_at=job.last_at,
+            )
+
     db: dict[str, int]  # collection name -> count
     logfile: int  # size in bytes
     system_log: int  # count
     threads: list[ThreadInfo]
-    scheduler_jobs: list[Scheduler.Job]
+    scheduler_jobs: list[Job]
 
 
 class DConfigInfo(BaseModel):
@@ -115,7 +133,7 @@ class SystemService:
             logfile=self.logfile.stat().st_size,
             system_log=self.db.dlog.count({}),
             threads=threads,
-            scheduler_jobs=self.scheduler.jobs,
+            scheduler_jobs=[Stats.Job.from_scheduler_job(j) for j in self.scheduler.jobs],
         )
 
     def read_logfile(self) -> str:

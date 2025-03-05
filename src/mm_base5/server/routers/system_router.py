@@ -1,17 +1,15 @@
 from fastapi import APIRouter
-from rich import inspect
 from starlette.responses import PlainTextResponse
 
+from mm_base5.core.system_service import Stats
 from mm_base5.server.deps import CoreDep
 
 router = APIRouter(prefix="/api/system", tags=["system"])
 
 
 @router.get("/stats")
-def get_stats(core: CoreDep) -> dict[str, object]:
-    res = core.system_service.get_stats().model_dump()
-    inspect(res)
-    return res
+def get_stats(core: CoreDep) -> Stats:
+    return core.system_service.get_stats()
 
 
 @router.get("/logfile", response_class=PlainTextResponse)

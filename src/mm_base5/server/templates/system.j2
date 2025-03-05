@@ -60,7 +60,7 @@
         </tr>
         {% for j in stats.scheduler_jobs %}
           <tr>
-            <td>{{ j.func.__qualname__ }}</td>
+            <td>{{ j.func }}</td>
             <td>{{ j.interval }}</td>
             <td>{{ j.last_at | dt }}</td>
             <td>{{ j.is_running | yes_no }}</td>
