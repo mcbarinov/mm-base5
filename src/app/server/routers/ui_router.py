@@ -1,8 +1,11 @@
-from fastapi import APIRouter
-from starlette.responses import HTMLResponse
+from typing import Annotated
+
+from bson import ObjectId
+from fastapi import APIRouter, Form
+from starlette.responses import HTMLResponse, RedirectResponse
 
 from app.server.deps import CoreDep
-from mm_base5 import TemplateDep
+from mm_base5 import TemplateDep, redirect
 
 router = APIRouter(include_in_schema=False)
 
@@ -16,3 +19,11 @@ def index_page(tpl: TemplateDep) -> HTMLResponse:
 def data_page(tpl: TemplateDep, core: CoreDep) -> HTMLResponse:
     data = core.db.data.find({}, "-created_at", 100)
     return tpl.render("data.j2", data_list=data)
+
+
+# ACTIONS
+@router.post("/data/{id}/inc")
+def inc_data(core: CoreDep, id: ObjectId, value: Annotated[int, Form()]) -> RedirectResponse:
+    core.db.data.update_one({"_id": id}, {"$inc": {"value": value}})
+    # flash(request, f"Data {id} incremented by {value}", "success")
+    return redirect("/data")
