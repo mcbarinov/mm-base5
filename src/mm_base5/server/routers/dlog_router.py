@@ -5,7 +5,7 @@ from mm_mongo import MongoDeleteResult
 from mm_base5.core.db import DLog
 from mm_base5.server.deps import CoreDep
 
-router = APIRouter(prefix="/api/system/dlogs", tags=["system"])
+router: APIRouter = APIRouter(prefix="/api/system/dlogs", tags=["system"])
 
 
 @router.get("/{id}")

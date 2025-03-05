@@ -6,7 +6,7 @@ from starlette.responses import HTMLResponse, RedirectResponse
 from mm_base5.server.deps import CoreDep, FormDep, TemplateDep
 from mm_base5.server.utils import redirect
 
-router = APIRouter(prefix="/system", include_in_schema=False)
+router: APIRouter = APIRouter(prefix="/system", include_in_schema=False)
 
 # PAGES
 

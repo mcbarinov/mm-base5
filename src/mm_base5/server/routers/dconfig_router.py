@@ -3,7 +3,7 @@ from starlette.responses import PlainTextResponse
 
 from mm_base5.server.deps import CoreDep
 
-router = APIRouter(prefix="/api/system/dconfigs", tags=["system"])
+router: APIRouter = APIRouter(prefix="/api/system/dconfigs", tags=["system"])
 
 
 @router.get("/toml", response_class=PlainTextResponse)

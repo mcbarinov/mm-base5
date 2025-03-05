@@ -4,7 +4,7 @@ from starlette.responses import PlainTextResponse
 from mm_base5.core.system_service import Stats
 from mm_base5.server.deps import CoreDep
 
-router = APIRouter(prefix="/api/system", tags=["system"])
+router: APIRouter = APIRouter(prefix="/api/system", tags=["system"])
 
 
 @router.get("/stats")

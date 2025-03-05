@@ -7,7 +7,7 @@ from mm_base5 import DC, DV, BaseServerConfig, DConfigModel, DValueModel
 
 class ServerConfig(BaseServerConfig):
     tags: list[str] = ["data"]
-    main_menu: dict[str, str] = {"/data": "data", "/test": "test"}
+    main_menu: dict[str, str] = {"/data": "data", "/misc": "misc"}
 
 
 class DConfigSettings(DConfigModel):
