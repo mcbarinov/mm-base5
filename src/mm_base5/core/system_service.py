@@ -90,7 +90,7 @@ class SystemService:
         data = toml.loads(toml_str)
         if key not in data:
             raise UserError(f"Key '{key}' not found in toml data")
-        DValueStorage.storage[key] = data[key]
+        DValueStorage.update_value(key, data[key])
 
     # system
 

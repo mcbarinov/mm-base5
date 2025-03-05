@@ -13,14 +13,12 @@ router = APIRouter(prefix="/system", include_in_schema=False)
 
 @router.get("/")
 def system_page(tpl: TemplateDep, core: CoreDep) -> HTMLResponse:
-    stats = core.system_service.get_stats()
-    return tpl.render("system.j2", stats=stats)
+    return tpl.render("system.j2", stats=core.system_service.get_stats())
 
 
 @router.get("/dconfigs")
 def dconfigs_page(tpl: TemplateDep, core: CoreDep) -> HTMLResponse:
-    info = core.system_service.get_dconfig_info()
-    return tpl.render("dconfigs.j2", info=info)
+    return tpl.render("dconfigs.j2", info=core.system_service.get_dconfig_info())
 
 
 @router.get("/dconfigs/toml")
@@ -31,6 +29,16 @@ def dconfigs_toml_page(tpl: TemplateDep, core: CoreDep) -> HTMLResponse:
 @router.get("/dconfigs/multiline/{key:str}")
 def dconfigs_multiline_page(tpl: TemplateDep, core: CoreDep, key: str) -> HTMLResponse:
     return tpl.render("dconfigs_multiline.j2", dconfig=core.dconfig, key=key)
+
+
+@router.get("/dvalues")
+def dvalues_page(tpl: TemplateDep, core: CoreDep) -> HTMLResponse:
+    return tpl.render("dvalues.j2", info=core.system_service.get_dvalue_info())
+
+
+@router.get("/dvalues/{key:str}")
+def update_dvalue_page(tpl: TemplateDep, core: CoreDep, key: str) -> HTMLResponse:
+    return tpl.render("dvalues_update.j2", value=core.system_service.export_dvalue_field_as_toml(key), key=key)
 
 
 # ACTIONS
@@ -56,3 +64,10 @@ def update_dconfig_from_toml(core: CoreDep, value: Annotated[str, Form()]) -> Re
     core.system_service.update_dconfig_from_toml(value)
     # flash(request, "dconfigs updated successfully", "success")
     return redirect("/system/dconfigs")
+
+
+@router.post("/dvalues/{key:str}")
+def update_dvalue(core: CoreDep, key: str, value: Annotated[str, Form()]) -> RedirectResponse:
+    core.system_service.update_dvalue_field(key, value)
+    # flash(request, "dvalue updated successfully", "success")
+    return redirect("/system/dvalues")

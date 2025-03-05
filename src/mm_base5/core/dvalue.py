@@ -96,6 +96,12 @@ class DValueStorage:
                 cls.update_persistent_value(key, value)
 
     @classmethod
+    def update_value(cls, key: str, value: object) -> None:
+        cls.storage[key] = value
+        if cls.persistent[key]:
+            cls.update_persistent_value(key, value)
+
+    @classmethod
     def update_persistent_value(cls, key: str, value: object) -> None:
         cls.collection.update(key, {"$set": {"value": encode_value(value), "updated_at": utc_now()}})
 
