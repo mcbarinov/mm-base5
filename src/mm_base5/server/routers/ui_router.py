@@ -41,6 +41,11 @@ def update_dvalue_page(tpl: TemplateDep, core: CoreDep, key: str) -> HTMLRespons
     return tpl.render("dvalues_update.j2", value=core.system_service.export_dvalue_field_as_toml(key), key=key)
 
 
+@router.get("/dlogs")
+def dlogs_page(tpl: TemplateDep, core: CoreDep) -> HTMLResponse:
+    return tpl.render("dlogs.j2", dlogs=core.db.dlog.find({}, "-created_at", 100))
+
+
 # ACTIONS
 
 

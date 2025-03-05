@@ -533,7 +533,7 @@ dev = [
 requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.11" },
     { name = "mm-jinja", specifier = "==0.0.3" },
-    { name = "mm-mongo", specifier = ">=0.2.4" },
+    { name = "mm-mongo", specifier = ">=0.3.2" },
     { name = "pydantic-settings", specifier = ">=2.8.0" },
 ]
 
@@ -562,14 +562,14 @@ wheels = [
 
 [[package]]
 name = "mm-mongo"
-version = "0.2.4"
+version = "0.3.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "mm-std" },
     { name = "pymongo" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5c/97/9736e94aef789a8751f78827b5f6c9b47f58beeaf9c010fc6c7891df9d2f/mm_mongo-0.2.4-py3-none-any.whl", hash = "sha256:886b7a3889bc05514848116f0e142357e9ddbe5ae0fe69453308423cd0d98f65", size = 6428 },
+    { url = "https://files.pythonhosted.org/packages/26/d8/015fe748340a7904b2818c6ef901e8fd9f438ae443fdf7a6c321548ebf8f/mm_mongo-0.3.2-py3-none-any.whl", hash = "sha256:70d59dfde9bfb1960cdc3347a0cccf1bcfe0cbe799b79fafa27b7d072c573f81", size = 6905 },
 ]
 
 [[package]]
