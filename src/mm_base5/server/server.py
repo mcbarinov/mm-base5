@@ -1,13 +1,17 @@
 import traceback
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 from logging import Logger
 from pathlib import Path
 
 from fastapi import APIRouter, FastAPI
+from fastapi.applications import AppType
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from starlette.staticfiles import StaticFiles
+from starlette.types import Lifespan
 
 from mm_base5 import BaseServerConfig, CoreConfig
 from mm_base5.core.core import BaseCore, DB_co, DCONFIG_co, DVALUE_co
@@ -18,24 +22,35 @@ from mm_base5.server.jinja import CustomJinja, Template
 from mm_base5.server.routers import base_router
 
 
-# noinspection PyUnresolvedReferences
 def init_server(
     core: BaseCore[DCONFIG_co, DVALUE_co, DB_co],
     server_config: BaseServerConfig,
     custom_jinja: CustomJinja,
     router: APIRouter,
 ) -> FastAPI:
-    app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
-    app.state.core = core
-    app.state.templates = Template(core, server_config, custom_jinja)
-    app.state.server_config = server_config
+    template = Template(core, server_config, custom_jinja)
+
+    app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=configure_lifespan(core))
+
+    configure_state(app, core, server_config, template)
+    configure_openapi(app, core.core_config, server_config)
+    configure_exception_handler(app, core.core_config, core.logger)
+
     app.include_router(base_router)
     app.include_router(router)
     app.mount("/assets", StaticFiles(directory=Path(__file__).parent.absolute() / "assets"), name="assets")
     app.add_middleware(AccessTokenMiddleware, access_token=server_config.access_token)
-    configure_openapi(app, core.core_config, server_config)
-    configure_exception_handler(app, core.core_config, core.logger)
+
     return app
+
+
+# noinspection PyUnresolvedReferences
+def configure_state(
+    app: FastAPI, core: BaseCore[DCONFIG_co, DVALUE_co, DB_co], server_config: BaseServerConfig, template: Template
+) -> None:
+    app.state.core = core
+    app.state.templates = template
+    app.state.server_config = server_config
 
 
 def configure_openapi(app: FastAPI, core_config: CoreConfig, server_config: BaseServerConfig) -> None:
@@ -73,3 +88,13 @@ def configure_exception_handler(app: FastAPI, core_config: CoreConfig, logger: L
             message = "error"
 
         return PlainTextResponse(message, status_code=500)
+
+
+def configure_lifespan(core: BaseCore[DCONFIG_co, DVALUE_co, DB_co]) -> Lifespan[AppType]:
+    @asynccontextmanager
+    async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: UP043
+        yield
+        core.logger.debug("server shutdown")
+        core.shutdown()
+
+    return lifespan
