@@ -1,6 +1,18 @@
 from fastapi import APIRouter
 
+from mm_base5.core.errors import UserError
+
 router = APIRouter(prefix="/api/misc", tags=["misc"])
+
+
+@router.get("/user-error")
+def user_error() -> str:
+    raise UserError("user bla bla bla")
+
+
+@router.get("/runtime-error")
+def runtime_error() -> str:
+    raise RuntimeError("runtime bla bla bla")
 
 
 # @router.get("/result-ok")

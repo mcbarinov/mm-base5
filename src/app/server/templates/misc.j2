@@ -4,18 +4,32 @@
     <h3>mics</h3>
   </div>
 
-  <section>
-    <b>response classes</b>
-    <ul>
-      <li><a href="/api/misc/result-ok">/api/misc/result-ok</a></li>
-      <li><a href="/api/misc/result-err">/api/misc/result-err</a></li>
-    </ul>
-  </section>
+  <div class="grid">
+    <section>
+      <b>response classes</b>
+      <ul>
+        <li><a href="/api/misc/result-ok">/api/misc/result-ok</a></li>
+        <li><a href="/api/misc/result-err">/api/misc/result-err</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <b>errors</b>
+      <ul>
+        <li><a href="/api/misc/user-error">/api/misc/user-error</a></li>
+        <li><a href="/api/misc/runtime-error">/api/misc/runtime-error</a></li>
+      </ul>
+    </section>
+  </div>
+
+
   <hr>
+
+
 
   <section>
     <b>empty filter</b><br>
-    Zero: {{ zero | empty}}<br>
+    Zero: {{ zero | empty }}<br>
   </section>
 
 {% endblock %}

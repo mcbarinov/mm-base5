@@ -14,7 +14,6 @@ def get_stats(core: CoreDep) -> Stats:
 
 @router.get("/logfile", response_class=PlainTextResponse)
 def get_logfile(core: CoreDep) -> str:
-    core.logger.info("ddd")
     return core.system_service.read_logfile()
 
 

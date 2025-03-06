@@ -1,13 +1,17 @@
+import traceback
+from logging import Logger
 from pathlib import Path
 
 from fastapi import APIRouter, FastAPI
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
-from starlette.responses import HTMLResponse, JSONResponse
+from starlette.requests import Request
+from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from starlette.staticfiles import StaticFiles
 
 from mm_base5 import BaseServerConfig, CoreConfig
 from mm_base5.core.core import BaseCore, DB_co, DCONFIG_co, DVALUE_co
+from mm_base5.core.errors import UserError
 from mm_base5.server import utils
 from mm_base5.server.auth import AccessTokenMiddleware
 from mm_base5.server.jinja import CustomJinja, Template
@@ -30,6 +34,7 @@ def init_server(
     app.mount("/assets", StaticFiles(directory=Path(__file__).parent.absolute() / "assets"), name="assets")
     app.add_middleware(AccessTokenMiddleware, access_token=server_config.access_token)
     configure_openapi(app, core.core_config, server_config)
+    configure_exception_handler(app, core.core_config, core.logger)
     return app
 
 
@@ -47,3 +52,24 @@ def configure_openapi(app: FastAPI, core_config: CoreConfig, server_config: Base
     @app.get("/system/openapi", include_in_schema=False)
     async def get_documentation() -> HTMLResponse:
         return get_swagger_ui_html(openapi_url="/system/openapi.json", title=core_config.app_name)
+
+
+def configure_exception_handler(app: FastAPI, core_config: CoreConfig, logger: Logger) -> None:
+    @app.exception_handler(Exception)
+    async def exception_handler(_request: Request, err: Exception) -> PlainTextResponse:
+        code = getattr(err, "code", None)
+
+        message = f"{err.__class__.__name__}: {err}"
+
+        hide_stacktrace = isinstance(err, UserError)
+        if code in [400, 401, 403, 404, 405]:
+            hide_stacktrace = True
+
+        if not hide_stacktrace:
+            logger.exception(err)
+            message += "\n\n" + traceback.format_exc()
+
+        if not core_config.debug:
+            message = "error"
+
+        return PlainTextResponse(message, status_code=500)
