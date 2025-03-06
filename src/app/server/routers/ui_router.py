@@ -2,8 +2,10 @@ from typing import Annotated
 
 from bson import ObjectId
 from fastapi import APIRouter, Form
+from fastapi.params import Query
 from starlette.responses import HTMLResponse, RedirectResponse
 
+from app.core.db import DataStatus
 from app.server.deps import CoreDep
 from mm_base5 import RenderDep, redirect
 
@@ -16,9 +18,16 @@ def index_page(render: RenderDep) -> HTMLResponse:
 
 
 @router.get("/data")
-def data_page(render: RenderDep, core: CoreDep) -> HTMLResponse:
-    data = core.db.data.find({}, "-created_at", 100)
-    return render.html("data.j2", data_list=data)
+def data_page(
+    render: RenderDep,
+    core: CoreDep,
+    status: Annotated[str | None, Query()] = None,
+    limit: Annotated[int, Query()] = 100,
+) -> HTMLResponse:
+    query = {"status": status} if status else {}
+    data = core.db.data.find(query, "-created_at", limit)
+    statuses = list(DataStatus)
+    return render.html("data.j2", data_list=data, statuses=statuses, form={"status": status, "limit": limit})
 
 
 @router.get("/misc")

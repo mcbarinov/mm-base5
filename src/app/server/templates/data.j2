@@ -8,6 +8,19 @@
     </ul>
   </nav>
 
+  <form method="GET">
+    <fieldset class="grid">
+      <select name="status">
+      <option value="">status...</option>
+        {% for status in statuses %}
+          <option value="{{ status.value }}" {{ "selected" if status.value == form.status }}>{{ status.value }}</option>
+        {% endfor %}
+      </select>
+      <input type="number" placeholder="limit" name="limit" value="{{ form.limit }}">
+      <input type="submit" value="filter">
+    </fieldset>
+  </form>
+
   <table class="sortable">
     <thead>
     <tr class="sticky-top">
