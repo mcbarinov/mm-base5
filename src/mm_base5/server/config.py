@@ -8,4 +8,9 @@ class BaseServerConfig(BaseSettings):
     tags: list[str]
     main_menu: dict[str, str]
 
+    @property
+    def tags_metadata(self) -> list[dict[str, str]]:
+        app = [{"name": t} for t in self.tags]
+        return [*app, {"name": "system"}]
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
