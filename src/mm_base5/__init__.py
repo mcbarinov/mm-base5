@@ -9,7 +9,7 @@ from .core.dconfig import DConfigModel as DConfigModel
 from .core.dvalue import DV as DV
 from .core.dvalue import DValueModel as DValueModel
 from .server.config import BaseServerConfig as BaseServerConfig
-from .server.deps import TemplateDep as TemplateDep
+from .server.deps import RenderDep as RenderDep
 from .server.jinja import CustomJinja as CustomJinja
 from .server.server import init_server as init_server
 from .server.utils import redirect as redirect

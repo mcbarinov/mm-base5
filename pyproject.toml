@@ -8,6 +8,7 @@ dependencies = [
     "mm-jinja==0.0.3",
     "pydantic-settings>=2.8.0",
     "fastapi[standard]>=0.115.11",
+    "itsdangerous~=2.2.0",
 ]
 
 [build-system]

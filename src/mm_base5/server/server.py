@@ -1,4 +1,3 @@
-import os
 import traceback
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -9,6 +8,8 @@ from fastapi import APIRouter, FastAPI
 from fastapi.applications import AppType
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
+from jinja2 import Environment
+from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from starlette.staticfiles import StaticFiles
@@ -19,7 +20,7 @@ from mm_base5.core.core import BaseCore, DB_co, DCONFIG_co, DVALUE_co
 from mm_base5.core.errors import UserError
 from mm_base5.server import utils
 from mm_base5.server.auth import AccessTokenMiddleware
-from mm_base5.server.jinja import CustomJinja, Template
+from mm_base5.server.jinja import CustomJinja, init_env
 from mm_base5.server.routers import base_router
 
 
@@ -29,13 +30,11 @@ def init_server(
     custom_jinja: CustomJinja,
     router: APIRouter,
 ) -> FastAPI:
-    os.environ["ANYIO_THREADPOOL_MAX_WORKERS"] = "20"  # or a higher value as needed
-
-    template = Template(core, server_config, custom_jinja)
+    jinja_env = init_env(core, server_config, custom_jinja)
 
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=configure_lifespan(core))
 
-    configure_state(app, core, server_config, template)
+    configure_state(app, core, server_config, jinja_env)
     configure_openapi(app, core.core_config, server_config)
     configure_exception_handler(app, core.core_config, core.logger)
 
@@ -43,16 +42,17 @@ def init_server(
     app.include_router(router)
     app.mount("/assets", StaticFiles(directory=Path(__file__).parent.absolute() / "assets"), name="assets")
     app.add_middleware(AccessTokenMiddleware, access_token=server_config.access_token)
+    app.add_middleware(SessionMiddleware, secret_key=server_config.access_token)
 
     return app
 
 
 # noinspection PyUnresolvedReferences
 def configure_state(
-    app: FastAPI, core: BaseCore[DCONFIG_co, DVALUE_co, DB_co], server_config: BaseServerConfig, template: Template
+    app: FastAPI, core: BaseCore[DCONFIG_co, DVALUE_co, DB_co], server_config: BaseServerConfig, jinja_env: Environment
 ) -> None:
     app.state.core = core
-    app.state.templates = template
+    app.state.jinja_env = jinja_env
     app.state.server_config = server_config
 
 

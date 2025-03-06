@@ -57,19 +57,9 @@
   {% endif %}
 </header>
 
-{#{% for flash_message in get_flashes() %}#}
-{#  {% if flash_message.category == "error" %}#}
-{#    <article class="error-card">#}
-{#      <header>Error</header>#}
-{#      <p>{{ flash_message.message }}</p>#}
-{#    </article>#}
-{#  {% else %}#}
-{#    <article class="success-card">#}
-{#      <p>{{ flash_message.message }}</p>#}
-{#    </article>#}
-{#  {% endif %}#}
-{#{% endfor %}#}
-
+{% for message in flash_messages %}
+  <div class="{{ "flash-error" if message.error else "flash-message" }}">{{ message.message }}</div>
+{% endfor %}
 
 <main>
   {% block content -%}

@@ -7,6 +7,7 @@ import mm_jinja
 from jinja2 import ChoiceLoader, Environment, PackageLoader
 from markupsafe import Markup
 from mm_mongo import json_dumps
+from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
 from mm_base5.core.core import BaseCoreAny
@@ -37,7 +38,9 @@ def init_env(core: BaseCoreAny, server_config: BaseServerConfig, custom_jinja: C
 
     header_info = custom_jinja.header_info if custom_jinja.header_info else lambda _: Markup("")
     footer_info = custom_jinja.footer_info if custom_jinja.footer_info else lambda _: Markup("")
-    custom_filters: dict[str, Callable[..., Any]] = {"system_log_data_truncate": system_log_data_truncate}
+    custom_filters: dict[str, Callable[..., Any]] = {
+        "system_log_data_truncate": system_log_data_truncate,
+    }
     custom_globals: dict[str, Any] = {
         "core_config": core.core_config,
         "server_config": server_config,
@@ -59,10 +62,17 @@ def init_env(core: BaseCoreAny, server_config: BaseServerConfig, custom_jinja: C
     return mm_jinja.init_jinja(loader, custom_globals=custom_globals, custom_filters=custom_filters)
 
 
-class Template:
-    def __init__(self, core: BaseCoreAny, server_config: BaseServerConfig, custom_jinja: CustomJinja) -> None:
-        self.env = init_env(core, server_config, custom_jinja)
+class Render:
+    def __init__(self, env: Environment, request: Request) -> None:
+        self.env = env
+        self.request = request
 
-    def render(self, template_name: str, **kwargs: object) -> HTMLResponse:
-        html_content = self.env.get_template(template_name).render(kwargs)
+    def html(self, template_name: str, **kwargs: object) -> HTMLResponse:
+        flash_messages = self.request.session.pop("flash_messages") if "flash_messages" in self.request.session else []
+        html_content = self.env.get_template(template_name).render(kwargs | {"flash_messages": flash_messages})
         return HTMLResponse(content=html_content, status_code=200)
+
+    def flash(self, message: str, is_error: bool = False) -> None:
+        if "flash_messages" not in self.request.session:
+            self.request.session["flash_messages"] = []
+        self.request.session["flash_messages"].append({"message": message, "error": is_error})

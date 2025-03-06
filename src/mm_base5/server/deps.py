@@ -1,19 +1,21 @@
 from typing import Annotated, cast
 
 from fastapi import Depends, Request
+from jinja2 import Environment
 from starlette.datastructures import FormData
 
 from mm_base5 import BaseServerConfig
 from mm_base5.core.core import BaseCoreAny
-from mm_base5.server.jinja import Template
+from mm_base5.server.jinja import Render
 
 
 def get_core(request: Request) -> BaseCoreAny:
     return cast(BaseCoreAny, request.app.state.core)
 
 
-def get_template(request: Request) -> Template:
-    return cast(Template, request.app.state.templates)
+def get_render(request: Request) -> Render:
+    jinja_env = cast(Environment, request.app.state.jinja_env)
+    return Render(jinja_env, request)
 
 
 def get_server_config(request: Request) -> BaseServerConfig:
@@ -26,5 +28,5 @@ async def get_form_data(request: Request) -> FormData:
 
 ServerConfigDep = Annotated[BaseServerConfig, Depends(get_server_config)]
 CoreDep = Annotated[BaseCoreAny, Depends(get_core)]
-TemplateDep = Annotated[Template, Depends(get_template)]
+RenderDep = Annotated[Render, Depends(get_render)]
 FormDep = Annotated[FormData, Depends(get_form_data)]

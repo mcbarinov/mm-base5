@@ -4,7 +4,7 @@ from fastapi import APIRouter, Form
 from starlette import status
 from starlette.responses import HTMLResponse, RedirectResponse
 
-from mm_base5 import TemplateDep
+from mm_base5 import RenderDep
 from mm_base5.server.auth import ACCESS_TOKEN_NAME
 from mm_base5.server.deps import ServerConfigDep
 
@@ -12,8 +12,8 @@ router: APIRouter = APIRouter(prefix="/auth", include_in_schema=False)
 
 
 @router.get("/login")
-def login_page(tpl: TemplateDep) -> HTMLResponse:
-    return tpl.render("login.j2")
+def login_page(render: RenderDep) -> HTMLResponse:
+    return render.html("login.j2")
 
 
 @router.post("/login")
