@@ -1,6 +1,6 @@
 from bson import ObjectId
 from fastapi import APIRouter
-from mm_mongo import MongoDeleteResult, MongoInsertOneResult, MongoUpdateResult
+from mm_mongo import MongoDeleteResult, MongoInsertManyResult, MongoInsertOneResult, MongoUpdateResult
 
 from app.core.db import Data
 from app.server.deps import CoreDep
@@ -8,9 +8,14 @@ from app.server.deps import CoreDep
 router = APIRouter(prefix="/api/data", tags=["data"])
 
 
-@router.post("/generate")
-def generate_data(core: CoreDep) -> MongoInsertOneResult[ObjectId]:
-    return core.data_service.generate_data()
+@router.post("/generate-one")
+def generate_one(core: CoreDep) -> MongoInsertOneResult[ObjectId]:
+    return core.data_service.generate_one()
+
+
+@router.post("/generate-many")
+def generate_many(core: CoreDep) -> MongoInsertManyResult[ObjectId]:
+    return core.data_service.generate_many()
 
 
 @router.get("/{id}")

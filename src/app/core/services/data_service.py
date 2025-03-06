@@ -12,7 +12,7 @@ class DataService(AppService):
     def __init__(self, base_params: AppServiceParams) -> None:
         super().__init__(base_params)
 
-    def generate_data(self) -> MongoInsertOneResult[ObjectId]:
+    def generate_one(self) -> MongoInsertOneResult[ObjectId]:
         status = random.choice(list(DataStatus))
         value = random.randint(0, 1_000_000)
 
