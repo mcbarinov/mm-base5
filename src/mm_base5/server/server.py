@@ -5,6 +5,7 @@ from starlette.staticfiles import StaticFiles
 
 from mm_base5 import BaseServerConfig
 from mm_base5.core.core import BaseCore, DB_co, DCONFIG_co, DVALUE_co
+from mm_base5.server.auth import AccessTokenMiddleware
 from mm_base5.server.jinja import CustomJinja, Template
 
 from .routers import base_router
@@ -24,4 +25,5 @@ def init_server(
     app.include_router(base_router)
     app.include_router(router)
     app.mount("/assets", StaticFiles(directory=Path(__file__).parent.absolute() / "assets"), name="assets")
+    app.add_middleware(AccessTokenMiddleware, access_token=server_config.access_token)
     return app
