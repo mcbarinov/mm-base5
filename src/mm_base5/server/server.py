@@ -1,3 +1,4 @@
+import os
 import traceback
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -28,6 +29,8 @@ def init_server(
     custom_jinja: CustomJinja,
     router: APIRouter,
 ) -> FastAPI:
+    os.environ["ANYIO_THREADPOOL_MAX_WORKERS"] = "20"  # or a higher value as needed
+
     template = Template(core, server_config, custom_jinja)
 
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=configure_lifespan(core))
