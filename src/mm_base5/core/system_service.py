@@ -5,8 +5,7 @@ from datetime import datetime
 from logging import Logger
 
 import pydash
-import toml
-from mm_std import Scheduler
+from mm_std import Scheduler, toml_dumps, toml_loads
 from pydantic import BaseModel
 
 from mm_base5.core.config import CoreConfig
@@ -77,10 +76,10 @@ class SystemService:
 
     def export_dconfig_as_toml(self) -> str:
         result = pydash.omit(DConfigStorage.storage, *DConfigStorage.hidden)
-        return toml.dumps(result)
+        return toml_dumps(result)
 
     def update_dconfig_from_toml(self, toml_value: str) -> bool | None:
-        data = toml.loads(toml_value)
+        data = toml_loads(toml_value)
         if isinstance(data, dict):
             return DConfigStorage.update({key: str(value) for key, value in data.items()})
 
@@ -96,16 +95,16 @@ class SystemService:
         )
 
     def export_dvalue_as_toml(self) -> str:
-        return toml.dumps(DValueStorage.storage)
+        return toml_dumps(DValueStorage.storage)
 
     def export_dvalue_field_as_toml(self, key: str) -> str:
-        return toml.dumps({key: DValueStorage.storage[key]})
+        return toml_dumps({key: DValueStorage.storage[key]})
 
     def get_dvalue_value(self, key: str) -> object:
         return DValueStorage.storage[key]
 
     def update_dvalue_field(self, key: str, toml_str: str) -> None:
-        data = toml.loads(toml_str)
+        data = toml_loads(toml_str)
         if key not in data:
             raise UserError(f"Key '{key}' not found in toml data")
         DValueStorage.update_value(key, data[key])
