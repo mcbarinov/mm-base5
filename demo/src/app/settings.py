@@ -2,10 +2,10 @@ from decimal import Decimal
 
 from mm_std import utc_now
 
-from mm_base5 import DC, DV, BaseServerConfig, DConfigModel, DValueModel
+from mm_base5 import DC, DV, ServerConfig, DConfigModel, DValueModel
 
 
-class ServerConfig(BaseServerConfig):
+class ServerConfig(ServerConfig):
     tags: list[str] = ["data", "misc"]
     main_menu: dict[str, str] = {"/data": "data", "/misc": "misc"}
 

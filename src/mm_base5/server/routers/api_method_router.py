@@ -3,7 +3,7 @@ from mm_std import hr
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 
-from mm_base5 import BaseServerConfig
+from mm_base5 import ServerConfig
 from mm_base5.server.auth import ACCESS_TOKEN_NAME
 from mm_base5.server.deps import ServerConfigDep
 
@@ -20,7 +20,7 @@ def api_delete(url: str, request: Request, server_config: ServerConfigDep) -> ob
     return _api_method("delete", url, server_config, request)
 
 
-def _api_method(method: str, url: str, server_config: BaseServerConfig, req: Request) -> object:
+def _api_method(method: str, url: str, server_config: ServerConfig, req: Request) -> object:
     base_url = str(req.base_url)
     if not base_url.endswith("/"):
         base_url = base_url + "/"

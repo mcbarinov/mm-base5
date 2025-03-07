@@ -1,13 +1,15 @@
 from decimal import Decimal
 
+from fastapi import APIRouter
 from mm_std import utc_now
 
-from mm_base5 import DC, DV, BaseServerConfig, DConfigModel, DValueModel
+from mm_base5 import DC, DV, CoreConfig, DConfigModel, DValueModel, ServerConfig
 
+core_config = CoreConfig()
 
-class ServerConfig(BaseServerConfig):
-    tags: list[str] = ["data", "misc"]
-    main_menu: dict[str, str] = {"/data": "data", "/misc": "misc"}
+server_config = ServerConfig()
+server_config.tags = ["data", "misc"]
+server_config.main_menu = {"/data": "data", "/misc": "misc"}
 
 
 class DConfigSettings(DConfigModel):
@@ -25,3 +27,13 @@ class DValueSettings(DValueModel):
     tmp2 = DV("bla")
     processed_block = DV(111, "bla bla about processed_block")
     last_checked_at = DV(utc_now(), "bla bla about last_checked_at", False)
+
+
+def get_router() -> APIRouter:
+    from app.server.routers import data_router, misc_router, ui_router
+
+    router = APIRouter()
+    router.include_router(ui_router.router)
+    router.include_router(data_router.router)
+    router.include_router(misc_router.router)
+    return router

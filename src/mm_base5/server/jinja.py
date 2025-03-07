@@ -12,7 +12,7 @@ from starlette.responses import HTMLResponse
 
 from mm_base5.core.core import BaseCoreAny
 from mm_base5.server import utils
-from mm_base5.server.config import BaseServerConfig
+from mm_base5.server.config import ServerConfig
 
 
 def system_log_data_truncate(data: object) -> str:
@@ -33,7 +33,7 @@ class CustomJinja:
     globals: dict[str, Any] | None = None
 
 
-def init_env(core: BaseCoreAny, server_config: BaseServerConfig, custom_jinja: CustomJinja) -> Environment:
+def init_env(core: BaseCoreAny, server_config: ServerConfig, custom_jinja: CustomJinja) -> Environment:
     loader = ChoiceLoader([PackageLoader("mm_base5.server"), PackageLoader("app.server")])
 
     header_info = custom_jinja.header_info if custom_jinja.header_info else lambda _: Markup("")

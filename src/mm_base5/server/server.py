@@ -15,7 +15,7 @@ from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from starlette.staticfiles import StaticFiles
 from starlette.types import Lifespan
 
-from mm_base5 import BaseServerConfig, CoreConfig
+from mm_base5 import CoreConfig, ServerConfig
 from mm_base5.core.core import BaseCore, DB_co, DCONFIG_co, DVALUE_co
 from mm_base5.core.errors import UserError
 from mm_base5.server import utils
@@ -26,7 +26,7 @@ from mm_base5.server.routers import base_router
 
 def init_server(
     core: BaseCore[DCONFIG_co, DVALUE_co, DB_co],
-    server_config: BaseServerConfig,
+    server_config: ServerConfig,
     custom_jinja: CustomJinja,
     router: APIRouter,
 ) -> FastAPI:
@@ -49,14 +49,14 @@ def init_server(
 
 # noinspection PyUnresolvedReferences
 def configure_state(
-    app: FastAPI, core: BaseCore[DCONFIG_co, DVALUE_co, DB_co], server_config: BaseServerConfig, jinja_env: Environment
+    app: FastAPI, core: BaseCore[DCONFIG_co, DVALUE_co, DB_co], server_config: ServerConfig, jinja_env: Environment
 ) -> None:
     app.state.core = core
     app.state.jinja_env = jinja_env
     app.state.server_config = server_config
 
 
-def configure_openapi(app: FastAPI, core_config: CoreConfig, server_config: BaseServerConfig) -> None:
+def configure_openapi(app: FastAPI, core_config: CoreConfig, server_config: ServerConfig) -> None:
     @app.get("/system/openapi.json", include_in_schema=False)
     async def get_open_api_endpoint() -> JSONResponse:
         openapi = get_openapi(

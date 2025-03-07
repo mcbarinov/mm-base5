@@ -1,12 +1,13 @@
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class BaseServerConfig(BaseSettings):
+class ServerConfig(BaseSettings):
     domain: str
     access_token: str
     use_https: bool = True
-    tags: list[str]
-    main_menu: dict[str, str]
+    tags: list[str] = Field(default_factory=list)
+    main_menu: dict[str, str] = Field(default_factory=dict)
 
     @property
     def tags_metadata(self) -> list[dict[str, str]]:

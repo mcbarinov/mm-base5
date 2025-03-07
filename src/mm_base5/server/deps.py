@@ -4,7 +4,7 @@ from fastapi import Depends, Request
 from jinja2 import Environment
 from starlette.datastructures import FormData
 
-from mm_base5 import BaseServerConfig
+from mm_base5 import ServerConfig
 from mm_base5.core.core import BaseCoreAny
 from mm_base5.server.jinja import Render
 
@@ -18,15 +18,15 @@ def get_render(request: Request) -> Render:
     return Render(jinja_env, request)
 
 
-def get_server_config(request: Request) -> BaseServerConfig:
-    return cast(BaseServerConfig, request.app.state.server_config)
+def get_server_config(request: Request) -> ServerConfig:
+    return cast(ServerConfig, request.app.state.server_config)
 
 
 async def get_form_data(request: Request) -> FormData:
     return await request.form()
 
 
-ServerConfigDep = Annotated[BaseServerConfig, Depends(get_server_config)]
+ServerConfigDep = Annotated[ServerConfig, Depends(get_server_config)]
 CoreDep = Annotated[BaseCoreAny, Depends(get_core)]
 RenderDep = Annotated[Render, Depends(get_render)]
 FormDep = Annotated[FormData, Depends(get_form_data)]
