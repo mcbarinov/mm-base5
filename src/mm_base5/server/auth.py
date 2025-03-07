@@ -7,7 +7,7 @@ from starlette.types import ASGIApp
 
 from mm_base5.server.utils import redirect
 
-ACCESS_TOKEN_NAME = "access-token"  # noqa: S105
+ACCESS_TOKEN_NAME = "access-token"  # noqa: S105 # nosec
 
 
 class AccessTokenMiddleware(BaseHTTPMiddleware):

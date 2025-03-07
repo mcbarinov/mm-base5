@@ -5,7 +5,7 @@ description = ""
 requires-python = ">=3.12"
 dependencies = [
     "mm-mongo>=0.3.4",
-    "mm-jinja==0.0.3",
+    "mm-jinja==0.0.4",
     "pydantic-settings>=2.8.0",
     "fastapi[standard]>=0.115.11",
     "itsdangerous~=2.2.0",
