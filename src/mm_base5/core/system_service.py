@@ -110,6 +110,13 @@ class SystemService:
             raise UserError(f"Key '{key}' not found in toml data")
         DValueStorage.update_value(key, data[key])
 
+    # slogs
+    def get_dlog_category_stats(self) -> dict[str, int]:
+        result = {}
+        for category in self.db.dlog.collection.distinct("category"):
+            result[category] = self.db.dlog.count({"category": category})
+        return result
+
     # system
 
     def get_stats(self) -> Stats:

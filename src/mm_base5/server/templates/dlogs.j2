@@ -2,6 +2,23 @@
 {% block content %}
   <h3>dlogs</h3>
 
+
+  <div class="grid">
+    <form method="GET">
+      <fieldset role="group">
+        <select name="category">
+          <option value="">category...</option>
+          {% for category in category_stats %}
+            <option value="{{ category }}" {{ "selected" if category==form.category }}>{{ category }}</option>
+          {% endfor %}
+        </select>
+        <input type="number" placeholder="limit" name="limit" value="{{ form.limit }}">
+        <input type="submit" value="filter" class="outline">
+      </fieldset>
+    </form>
+    <div></div>
+  </div>
+
   <table>
     <tr>
       <th>created_at</th>

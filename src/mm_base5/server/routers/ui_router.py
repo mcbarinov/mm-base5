@@ -1,6 +1,6 @@
 from typing import Annotated, cast
 
-from fastapi import APIRouter, Form
+from fastapi import APIRouter, Form, Query
 from starlette.responses import HTMLResponse, RedirectResponse
 
 from mm_base5.server.deps import CoreDep, FormDep, RenderDep
@@ -42,8 +42,14 @@ def update_dvalue_page(render: RenderDep, core: CoreDep, key: str) -> HTMLRespon
 
 
 @router.get("/dlogs")
-def dlogs_page(render: RenderDep, core: CoreDep) -> HTMLResponse:
-    return render.html("dlogs.j2", dlogs=core.db.dlog.find({}, "-created_at", 100))
+def dlogs_page(
+    render: RenderDep, core: CoreDep, category: Annotated[str | None, Query()] = None, limit: Annotated[int, Query()] = 100
+) -> HTMLResponse:
+    category_stats = core.system_service.get_dlog_category_stats()
+    query = {"category": category} if category else {}
+    dlogs = core.db.dlog.find(query, "-created_at", limit)
+    form = {"category": category, "limit": limit}
+    return render.html("dlogs.j2", dlogs=dlogs, category_stats=category_stats, form=form)
 
 
 # ACTIONS
