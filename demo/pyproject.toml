@@ -1,15 +1,9 @@
 [project]
-name = "mm-base5"
+name = "app"
 version = "0.0.1"
 description = ""
-requires-python = ">=3.12"
-dependencies = [
-    "mm-mongo>=0.3.4",
-    "mm-jinja==0.0.4",
-    "pydantic-settings>=2.8.0",
-    "fastapi[standard]>=0.115.11",
-    "itsdangerous~=2.2.0",
-]
+requires-python = ">=3.13"
+dependencies = ["mm-base5~=0.0.1"]
 
 [build-system]
 requires = ["hatchling"]
@@ -29,17 +23,20 @@ dev-dependencies = [
 
 [tool.mypy]
 python_version = "3.13"
-mypy_path = "stubs"
+implicit_reexport = true
 warn_no_return = false
 strict = true
 plugins = "pydantic.mypy"
-exclude = ["^tests/", "^cookiecutter", "^demo/"]
-
+[[tool.mypy.overrides]]
+module = ["wtforms.*", "telebot.types.*", "telebot.util.*"]
+ignore_missing_imports = true
+[[tool.mypy.overrides]]
+module = ["app.routers.*"]
+disable_error_code = ["no-untyped-def"]
 
 [tool.ruff]
 line-length = 130
 target-version = "py313"
-exclude = ["demo/", "cookiecutter/"]
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
@@ -65,10 +62,7 @@ ignore = [
     "RET503", # flake8-return: implicit-return
     "RUF012", # ruff: mutable-class-default
     "COM812", # it's used in ruff formatter
-#    "T201", # DELETE ME!
 ]
-[tool.ruff.lint.flake8-builtins]
-builtins-ignorelist = ["id"]
 [tool.ruff.lint.pep8-naming]
 classmethod-decorators = ["field_validator"]
 [tool.ruff.lint.per-file-ignores]
@@ -77,9 +71,7 @@ classmethod-decorators = ["field_validator"]
 quote-style = "double"
 indent-style = "space"
 
+
 [tool.bandit]
 exclude_dirs = ["tests"]
 skips = ["B311"]
-
-[tool.pytest.ini_options]
-addopts = "-n auto"
