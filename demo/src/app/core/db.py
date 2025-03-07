@@ -3,11 +3,10 @@ from enum import Enum, unique
 from typing import ClassVar
 
 from bson import ObjectId
+from mm_base5 import BaseDb
 from mm_mongo import MongoCollection, MongoModel
 from mm_std import utc_now
 from pydantic import Field
-
-from mm_base5 import BaseDb
 
 
 @unique

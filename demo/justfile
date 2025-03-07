@@ -50,3 +50,6 @@ publish: docker-upload
 
 dev:
     uv run uvicorn --reload --port 3000 --log-level=warning --factory app.main:start
+
+uvicorn:
+    uvicorn --port 3000 --log-level=warning --factory app.main:start
