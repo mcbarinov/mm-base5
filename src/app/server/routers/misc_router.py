@@ -26,7 +26,7 @@ def sleep_seconds(seconds: int, core: CoreDep) -> str:
     core.logger.debug("sleep_seconds called: %d", seconds)
     time.sleep(seconds)
     counter = core.misc_service.increment_counter()
-    core.logger.debug("sleep_seconds finished: %d, perf_couter=%s", seconds, time.perf_counter() - start)
+    core.logger.debug("sleep_seconds finished: %d, perf_counter=%s, counter=%s", seconds, time.perf_counter() - start, counter)
     return f"counter: {counter}"
 
 
