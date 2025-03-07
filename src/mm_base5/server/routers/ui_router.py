@@ -49,7 +49,8 @@ def dlogs_page(
     query = {"category": category} if category else {}
     dlogs = core.db.dlog.find(query, "-created_at", limit)
     form = {"category": category, "limit": limit}
-    return render.html("dlogs.j2", dlogs=dlogs, category_stats=category_stats, form=form)
+    all_count = core.db.dlog.count({})
+    return render.html("dlogs.j2", dlogs=dlogs, category_stats=category_stats, form=form, all_count=all_count)
 
 
 # ACTIONS

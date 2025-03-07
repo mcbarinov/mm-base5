@@ -10,7 +10,7 @@ sync:
     uv sync
 
 build: clean lint audit test
-    uv build --wheel --package mm-base3
+    uv build --wheel --package mm-base5
 
 format:
     uv run ruff check --select I --fix src tests

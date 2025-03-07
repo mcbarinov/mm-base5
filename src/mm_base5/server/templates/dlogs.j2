@@ -16,7 +16,19 @@
         <input type="submit" value="filter" class="outline">
       </fieldset>
     </form>
-    <div></div>
+    <div>
+      <details>
+        <summary role="button" class="outline">delete</summary>
+        <ul>
+          {% for category, count in category_stats.items() %}
+            <li>{{ category }} / {{ count }} / <a href="/api-delete/system/dlogs/category/{{ category }}" {{ confirm }}>delete</a></li>
+          {% endfor %}
+
+
+        </ul>
+        <p>all dlogs / {{ all_count }} / <a href="/api-delete/system/dlogs" {{ confirm }}>delete</a></p>
+      </details>
+    </div>
   </div>
 
   <table>

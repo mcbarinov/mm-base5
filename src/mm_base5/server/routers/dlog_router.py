@@ -16,3 +16,14 @@ def get_dlog(core: CoreDep, id: ObjectId) -> DLog:
 @router.delete("/{id}")
 def delete_dlog(core: CoreDep, id: ObjectId) -> MongoDeleteResult:
     return core.db.dlog.delete(id)
+
+
+@router.delete("/category/{category}")
+def delete_by_category(core: CoreDep, category: str) -> MongoDeleteResult:
+    return core.db.dlog.delete_many({"category": category})
+
+
+@router.delete("")
+def delete_all_dlogs(core: CoreDep) -> MongoDeleteResult:
+    core.logger.debug("delete_all_dlogs called")
+    return core.db.dlog.delete_many({})
