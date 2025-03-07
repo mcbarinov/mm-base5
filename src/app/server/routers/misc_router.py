@@ -1,6 +1,7 @@
 import time
 
 from fastapi import APIRouter
+from mm_std import Err, Ok, Result
 from starlette.responses import PlainTextResponse
 
 from app.server.deps import CoreDep
@@ -29,11 +30,11 @@ def sleep_seconds(seconds: int, core: CoreDep) -> str:
     return f"counter: {counter}"
 
 
-# @router.get("/result-ok")
-# def result_ok() -> Result[str]:
-#     return Ok("it works")
-#
-#
-# @router.get("/result-err")
-# def result_err() -> Result[str]:
-#     return Err("bla bla", data=["ssss", 123])
+@router.get("/result-ok")
+def result_ok() -> Result[str]:
+    return Ok("it works")
+
+
+@router.get("/result-err")
+def result_err() -> Result[str]:
+    return Err("bla bla", data=["ssss", 123])
