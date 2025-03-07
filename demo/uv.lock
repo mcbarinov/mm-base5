@@ -30,7 +30,6 @@ version = "0.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "mm-base5" },
-    { name = "toml" },
 ]
 
 [package.dev-dependencies]
@@ -46,10 +45,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "mm-base5", specifier = "~=0.0.2" },
-    { name = "toml", specifier = ">=0.10.2" },
-]
+requires-dist = [{ name = "mm-base5", specifier = "~=0.0.3" }]
 
 [package.metadata.requires-dev]
 dev = [
@@ -514,7 +510,7 @@ wheels = [
 
 [[package]]
 name = "mm-base5"
-version = "0.0.2"
+version = "0.0.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
@@ -524,7 +520,7 @@ dependencies = [
     { name = "pydantic-settings" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b8/e3/76a2133025ee213809d00c29d2913c4aafe1d39d97ec9f91024db7e1c877/mm_base5-0.0.2-py3-none-any.whl", hash = "sha256:059408b4b098b07deae584207b193cfb8716d5f1633885420029d548c153b3f0", size = 39205 },
+    { url = "https://files.pythonhosted.org/packages/19/ba/189509086f9f5639a1f28b934c254fc41d4bda0b9f5e13215619d4db0475/mm_base5-0.0.3-py3-none-any.whl", hash = "sha256:b796d12cf597b95a2a2a9f3ade9b20e22af459ab64398aca46db4a336107ccd7", size = 39207 },
 ]
 
 [[package]]
@@ -540,19 +536,19 @@ wheels = [
 
 [[package]]
 name = "mm-mongo"
-version = "0.3.4"
+version = "0.3.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "mm-std" },
     { name = "pymongo" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/77/45/bc98e557011d1d9690ec276c8f25c56060e1129f0cbb57bdd21ee5cb0298/mm_mongo-0.3.4-py3-none-any.whl", hash = "sha256:b00d37d25b5fb0c5490c3113ff6ac8de3c6caddda2b06ca732855634e9e7ae90", size = 6839 },
+    { url = "https://files.pythonhosted.org/packages/44/f7/b84cbbffe120342748c57942cc236ca2fdca883f940662b63a07fe2ec824/mm_mongo-0.3.5-py3-none-any.whl", hash = "sha256:b1fd6c6387198c3d694fe7eeae0475ee57a5aa4016efd97cbbef577620d67f4e", size = 6841 },
 ]
 
 [[package]]
 name = "mm-std"
-version = "0.3.4"
+version = "0.3.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cryptography" },
@@ -560,11 +556,11 @@ dependencies = [
     { name = "pydantic" },
     { name = "pydash" },
     { name = "python-dotenv" },
-    { name = "pyyaml" },
     { name = "rich" },
+    { name = "tomlkit" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d6/7e/d274b98b4614dfb5c5922d78aae8663ce920935350c57ba7476ddd5355b0/mm_std-0.3.4-py3-none-any.whl", hash = "sha256:cb0a7873c82fc8d6e725fb9e2f752f334793e06b227e40efd2f2290a631eb05c", size = 14802 },
+    { url = "https://files.pythonhosted.org/packages/95/70/fcd121caf06b3a7871c1dd40b2d330c732eb2dc92d93557b36761437d41e/mm_std-0.3.5-py3-none-any.whl", hash = "sha256:b56ba1a26649c3f9f81644114be9403cabdba45f29cdae870cda55ea4f9694b0", size = 15288 },
 ]
 
 [[package]]
@@ -1066,6 +1062,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f", size = 22253 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b", size = 16588 },
+]
+
+[[package]]
+name = "tomlkit"
+version = "0.13.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b1/09/a439bec5888f00a54b8b9f05fa94d7f901d6735ef4e55dcec9bc37b5d8fa/tomlkit-0.13.2.tar.gz", hash = "sha256:fff5fe59a87295b278abd31bec92c15d9bc4a06885ab12bcea52c71119392e79", size = 192885 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f9/b6/a447b5e4ec71e13871be01ba81f5dfc9d0af7e473da256ff46bc0e24026f/tomlkit-0.13.2-py3-none-any.whl", hash = "sha256:7a974427f6e119197f670fbbbeae7bef749a6c14e793db934baefc1b5f03efde", size = 37955 },
 ]
 
 [[package]]
