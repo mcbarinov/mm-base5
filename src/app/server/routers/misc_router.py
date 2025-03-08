@@ -1,6 +1,7 @@
 import time
+from typing import Annotated
 
-from fastapi import APIRouter
+from fastapi import APIRouter, File, UploadFile
 from mm_std import Err, Ok, Result
 from starlette.responses import PlainTextResponse
 
@@ -38,3 +39,17 @@ def result_ok() -> Result[str]:
 @router.get("/result-err")
 def result_err() -> Result[str]:
     return Err("bla bla", data=["ssss", 123])
+
+
+@router.post("/async-upload")
+async def async_upload(file: Annotated[UploadFile, File()]) -> dict[str, str]:
+    content = await file.read()
+    text_content = content.decode("utf-8")
+    return {"text_content": text_content}
+
+
+@router.post("/sync-upload")
+def sync_upload(file: Annotated[UploadFile, File()]) -> dict[str, str]:
+    content = file.file.read()
+    text_content = content.decode("utf-8")
+    return {"text_content": text_content}

@@ -32,4 +32,21 @@
     Zero: {{ zero | empty }}<br>
   </section>
 
+  <hr>
+  <div class="grid">
+    <form method="POST" action="/api/misc/async-upload" enctype="multipart/form-data">
+      <fieldset role="group">
+        <input type="file" name="file">
+        <input type="submit" value="async upload">
+      </fieldset>
+    </form>
+
+    <form method="POST" action="/api/misc/sync-upload" enctype="multipart/form-data">
+      <fieldset role="group">
+        <input type="file" name="file">
+        <input type="submit" value="sync upload">
+      </fieldset>
+    </form>
+  </div>
+
 {% endblock %}
