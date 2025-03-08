@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum, unique
-from typing import Any, ClassVar, Self, get_args
+from typing import Any, ClassVar, Self, get_args, get_origin, get_type_hints
 
 from bson import ObjectId
 from mm_mongo import DatabaseAny, MongoCollection, MongoModel
@@ -92,16 +92,31 @@ class BaseDb(BaseModel):
 
     @classmethod
     def init_collections(cls, database: DatabaseAny) -> Self:
-        # Collect all class-level attributes, including those from base classes
-        attributes = {}
-        for base in cls.__mro__:
-            if hasattr(base, "__annotations__"):
-                attributes.update(base.__annotations__)
-
         data: dict[str, MongoCollection[Any, Any]] = {}
-        for key, value in attributes.items():
-            if key == "database":
-                continue
+        for key, value in cls._mongo_collections().items():
             model = get_args(value)[1]
             data[key] = MongoCollection(database, model)
         return cls(**data, database=database)
+
+    @classmethod
+    def _mongo_collections(cls) -> dict[str, MongoCollection[Any, Any]]:
+        result: dict[str, MongoCollection[Any, Any]] = {}
+
+        for base in reversed(cls.__mro__):
+            # Try to get the fully resolved annotations first
+            try:
+                annotations = get_type_hints(base)
+            except (NameError, TypeError):
+                # Fall back to __annotations__ if get_type_hints fails
+                if hasattr(base, "__annotations__"):
+                    annotations = base.__annotations__
+                else:
+                    continue
+
+            for key, value in annotations.items():
+                # Check if the annotation is a MongoCollection
+                origin = get_origin(value)
+                if origin is MongoCollection:
+                    result[key] = value
+
+        return result

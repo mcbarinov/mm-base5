@@ -38,3 +38,5 @@ class Data(MongoModel[ObjectId]):
 
 class Db(BaseDb):
     data: MongoCollection[ObjectId, Data]
+
+
