@@ -1,3 +1,5 @@
+import time
+
 from bson import ObjectId
 from fastapi import APIRouter
 from mm_mongo import MongoDeleteResult, MongoInsertManyResult, MongoInsertOneResult, MongoUpdateResult
@@ -31,3 +33,13 @@ def inc_data(core: CoreDep, id: ObjectId, value: int | None = None) -> MongoUpda
 @router.delete("/{id}")
 def delete_data(core: CoreDep, id: ObjectId) -> MongoDeleteResult:
     return core.db.data.delete(id)
+
+
+@router.get("/sleep/{seconds}")
+def sleep_seconds(seconds: int, core: CoreDep) -> dict[str, object]:
+    start = time.perf_counter()
+    core.logger.debug("sleep_seconds called: %d", seconds)
+    time.sleep(seconds)
+    counter = core.misc_service.increment_counter()
+    core.logger.debug("sleep_seconds: %d, perf_counter=%s, counter=%s", seconds, time.perf_counter() - start, counter)
+    return {"sleep_seconds": seconds, "counter": counter, "perf_counter": time.perf_counter() - start}

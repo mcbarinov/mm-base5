@@ -3,7 +3,6 @@ from typing import Annotated
 
 from fastapi import APIRouter, File, UploadFile
 from mm_std import Err, Ok, Result
-from starlette.responses import PlainTextResponse
 
 from app.server.deps import CoreDep
 from mm_base5 import UserError
@@ -21,14 +20,14 @@ def runtime_error() -> str:
     raise RuntimeError("runtime bla bla bla")
 
 
-@router.get("/sleep/{seconds}", response_class=PlainTextResponse)
-def sleep_seconds(seconds: int, core: CoreDep) -> str:
+@router.get("/sleep/{seconds}")
+def sleep_seconds(seconds: int, core: CoreDep) -> dict[str, object]:
     start = time.perf_counter()
     core.logger.debug("sleep_seconds called: %d", seconds)
     time.sleep(seconds)
     counter = core.misc_service.increment_counter()
-    core.logger.debug("sleep_seconds finished: %d, perf_counter=%s, counter=%s", seconds, time.perf_counter() - start, counter)
-    return f"counter: {counter}"
+    core.logger.debug("sleep_seconds: %d, perf_counter=%s, counter=%s", seconds, time.perf_counter() - start, counter)
+    return {"sleep_seconds": seconds, "counter": counter, "perf_counter": time.perf_counter() - start}
 
 
 @router.get("/result-ok")
