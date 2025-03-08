@@ -6,7 +6,7 @@ from mm_std import Err, Ok, Result
 from starlette.responses import PlainTextResponse
 
 from app.server.deps import CoreDep
-from mm_base5.core.errors import UserError
+from mm_base5 import UserError
 
 router = APIRouter(prefix="/api/misc", tags=["misc"])
 

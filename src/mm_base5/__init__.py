@@ -1,3 +1,5 @@
+from mm_base5.core.errors import UserError as UserError
+
 from .core.config import CoreConfig as CoreConfig
 from .core.core import BaseCore as BaseCore
 from .core.core import BaseCoreAny as BaseCoreAny
