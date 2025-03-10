@@ -3,13 +3,15 @@ from __future__ import annotations
 import threading
 from datetime import datetime
 from logging import Logger
+from typing import cast
 
 import pydash
-from mm_std import Scheduler, toml_dumps, toml_loads
+from bson import ObjectId
+from mm_std import Scheduler, hr, toml_dumps, toml_loads, utc_now
 from pydantic import BaseModel
 
 from mm_base5.core.config import CoreConfig
-from mm_base5.core.db import BaseDb, DConfigType
+from mm_base5.core.db import BaseDb, DConfigType, DLog
 from mm_base5.core.dconfig import DConfigStorage
 from mm_base5.core.dvalue import DValueStorage
 from mm_base5.core.errors import UserError
@@ -86,6 +88,9 @@ class SystemService:
     def update_dconfig(self, data: dict[str, str]) -> bool:
         return DConfigStorage.update(data)
 
+    def has_dconfig_key(self, key: str) -> bool:
+        return key in DConfigStorage.storage
+
     # dvalue
     def get_dvalue_info(self) -> DValueInfo:
         return DValueInfo(
@@ -109,7 +114,14 @@ class SystemService:
             raise UserError(f"Key '{key}' not found in toml data")
         DValueStorage.update_value(key, data[key])
 
-    # slogs
+    def has_dvalue_key(self, key: str) -> bool:
+        return key in DValueStorage.storage
+
+    # dlogs
+    def dlog(self, category: str, data: object = None) -> None:
+        self.logger.debug("dlog: %s %s", category, data)
+        self.db.dlog.insert_one(DLog(id=ObjectId(), category=category, data=data))
+
     def get_dlog_category_stats(self) -> dict[str, int]:
         result = {}
         for category in self.db.dlog.collection.distinct("category"):
@@ -117,6 +129,28 @@ class SystemService:
         return result
 
     # system
+
+    def has_proxy_settings(self) -> bool:
+        return (
+            "proxies_url" in DConfigStorage.storage
+            and "proxies" in DValueStorage.storage
+            and "proxies_updated_at" in DValueStorage.storage
+        )
+
+    def update_proxies(self) -> int | None:
+        if not self.has_proxy_settings():
+            return None
+
+        proxies_url = cast(str, DConfigStorage.storage.get("proxies_url"))
+        res = hr(proxies_url)
+        if res.is_error():
+            self.dlog("update_proxies", {"error": res.error})
+            return -1
+        proxies = res.body.strip().splitlines()
+        proxies = [p.strip() for p in proxies if p.strip()]
+        DValueStorage.update_value("proxies", proxies)
+        DValueStorage.update_value("proxies_updated_at", utc_now())
+        return len(proxies)
 
     def get_stats(self) -> Stats:
         # threads

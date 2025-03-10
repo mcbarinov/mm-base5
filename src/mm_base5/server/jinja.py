@@ -51,7 +51,7 @@ def init_env(core: BaseCoreAny, server_config: ServerConfig, custom_jinja: Custo
         "footer_info": partial(footer_info, core),
         "header_info_new_line": custom_jinja.header_info_new_line,
         "app_version": utils.get_package_version("app"),
-        "mm_base3_version": utils.get_package_version("mm_base3"),
+        "mm_base5_version": utils.get_package_version("mm_base5"),
     }
 
     if custom_jinja.globals:

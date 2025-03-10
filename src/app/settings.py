@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal
 
 from fastapi import APIRouter
@@ -13,6 +14,7 @@ server_config.main_menu = {"/data": "data", "/misc": "misc"}
 
 
 class DConfigSettings(DConfigModel):
+    proxies_url = DC("http://localhost:8000", "proxies url, each proxy on new line")
     telegram_token = DC("", "telegram bot token", hide=True)
     telegram_chat_id = DC(0, "telegram chat id")
     telegram_polling = DC(False)
@@ -23,6 +25,8 @@ class DConfigSettings(DConfigModel):
 
 
 class DValueSettings(DValueModel):
+    proxies: DV[list[str]] = DV([])
+    proxies_updated_at: DV[datetime | None] = DV(None)
     tmp1 = DV("bla")
     tmp2 = DV("bla")
     processed_block = DV(111, "bla bla about processed_block")

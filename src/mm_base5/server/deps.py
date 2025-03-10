@@ -27,6 +27,6 @@ async def get_form_data(request: Request) -> FormData:
 
 
 ServerConfigDep = Annotated[ServerConfig, Depends(get_server_config)]
-CoreDep = Annotated[BaseCoreAny, Depends(get_core)]
+BaseCoreDep = Annotated[BaseCoreAny, Depends(get_core)]
 RenderDep = Annotated[Render, Depends(get_render)]
 FormDep = Annotated[FormData, Depends(get_form_data)]

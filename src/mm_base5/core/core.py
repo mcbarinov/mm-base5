@@ -49,6 +49,9 @@ class BaseCore(Generic[DCONFIG_co, DVALUE_co, DB_co], ABC):
         self.dconfig: DCONFIG_co = DConfigStorage.init_storage(self.db.dconfig, dconfig_settings, self.dlog)
         self.dvalue: DVALUE_co = DValueStorage.init_storage(self.db.dvalue, dvalue_settings)
 
+        if self.system_service.has_proxy_settings():
+            self.scheduler.add_job(self.system_service.update_proxies, interval=60)
+
     def startup(self) -> None:
         self.scheduler.start()
         self.start()
