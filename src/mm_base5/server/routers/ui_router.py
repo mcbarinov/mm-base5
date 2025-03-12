@@ -13,7 +13,8 @@ router: APIRouter = APIRouter(prefix="/system", include_in_schema=False)
 
 @router.get("/")
 def system_page(render: RenderDep, core: BaseCoreDep) -> HTMLResponse:
-    return render.html("system.j2", stats=core.system_service.get_stats())
+    has_telegram_settings = core.system_service.has_telegram_settings()
+    return render.html("system.j2", stats=core.system_service.get_stats(), has_telegram_settings=has_telegram_settings)
 
 
 @router.get("/dconfigs")

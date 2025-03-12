@@ -1,11 +1,12 @@
 [project]
 name = "mm-base5"
-version = "0.0.6"
+version = "0.0.7"
 description = ""
 requires-python = ">=3.12"
 dependencies = [
     "mm-mongo>=0.3.5",
-    "mm-jinja==0.0.4",
+    "mm-jinja~=0.0.4",
+    "mm-telegram~=0.0.5",
     "pydantic-settings>=2.8.0",
     "fastapi[standard]>=0.115.11",
     "itsdangerous~=2.2.0",
@@ -64,7 +65,7 @@ ignore = [
     "RET503", # flake8-return: implicit-return
     "RUF012", # ruff: mutable-class-default
     "COM812", # it's used in ruff formatter
-#    "T201", # DELETE ME!
+    #    "T201", # DELETE ME!
 ]
 [tool.ruff.lint.flake8-builtins]
 builtins-ignorelist = ["id"]

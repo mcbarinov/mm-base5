@@ -9,7 +9,7 @@ from typing import Generic, TypeVar
 
 from bson import ObjectId
 from mm_mongo import MongoConnection
-from mm_std import Scheduler, init_logger
+from mm_std import Result, Scheduler, init_logger
 
 from mm_base5.core.config import CoreConfig
 from mm_base5.core.db import BaseDb, DLog
@@ -82,6 +82,7 @@ class BaseCore(Generic[DCONFIG_co, DVALUE_co, DB_co], ABC):
             dvalue=self.dvalue,
             db=self.db,
             dlog=self.dlog,
+            send_telegram_message=self.system_service.send_telegram_message,
         )
 
     @abstractmethod
@@ -104,6 +105,7 @@ class BaseServiceParams(Generic[DCONFIG, DVALUE, DB]):
     db: DB
     logger: Logger
     dlog: Callable[[str, object], None]
+    send_telegram_message: Callable[[str], Result[list[int]]]
 
 
 class BaseService(Generic[DCONFIG_co, DVALUE_co, DB_co]):
@@ -114,3 +116,4 @@ class BaseService(Generic[DCONFIG_co, DVALUE_co, DB_co]):
         self.db = base_params.db
         self.logger = base_params.logger
         self.dlog = base_params.dlog
+        self.send_telegram_message = base_params.send_telegram_message

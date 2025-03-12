@@ -5,9 +5,10 @@ from datetime import datetime
 from logging import Logger
 from typing import cast
 
+import mm_telegram
 import pydash
 from bson import ObjectId
-from mm_std import Scheduler, hr, toml_dumps, toml_loads, utc_now
+from mm_std import Err, Result, Scheduler, hr, synchronized, toml_dumps, toml_loads, utc_now
 from pydantic import BaseModel
 
 from mm_base5.core.config import CoreConfig
@@ -130,6 +131,21 @@ class SystemService:
 
     # system
 
+    def has_telegram_settings(self) -> bool:
+        try:
+            token = cast(str, DConfigStorage.storage.get("telegram_token"))
+            chat_id = cast(int, DConfigStorage.storage.get("telegram_chat_id"))
+            return ":" in token and chat_id != 0  # noqa: TRY300
+        except Exception:
+            return False
+
+    def send_telegram_message(self, message: str) -> Result[list[int]]:
+        if not self.has_telegram_settings():
+            return Err("telegram token or chat_id is not set")
+        token = cast(str, DConfigStorage.storage.get("telegram_token"))
+        chat_id = cast(int, DConfigStorage.storage.get("telegram_chat_id"))
+        return mm_telegram.send_telegram_message(token, chat_id, message)
+
     def has_proxy_settings(self) -> bool:
         return (
             "proxies_url" in DConfigStorage.storage
@@ -137,6 +153,7 @@ class SystemService:
             and "proxies_updated_at" in DValueStorage.storage
         )
 
+    @synchronized
     def update_proxies(self) -> int | None:
         if not self.has_proxy_settings():
             return None

@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from mm_std import Result
 from starlette.responses import PlainTextResponse
 
 from mm_base5.core.system_service import Stats
@@ -25,3 +26,11 @@ def clean_logfile(core: BaseCoreDep) -> None:
 @router.post("/update-proxies")
 def update_proxies(core: BaseCoreDep) -> int | None:
     return core.system_service.update_proxies()
+
+
+@router.post("/send-test-telegram-message")
+def send_test_telegram_message(core: BaseCoreDep) -> Result[list[int]]:
+    message = ""
+    for i in range(1800):
+        message += f"{i} "
+    return core.system_service.send_telegram_message(message)

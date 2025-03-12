@@ -22,6 +22,7 @@ class DataService(AppService):
         res = hr("https://httpbin.org/get")
         self.dlog("generate_many", {"res": res.json, "large-data": "abc" * 100})
         self.dlog("ddd", self.dconfig.telegram_token)
+        self.send_telegram_message("generate_many")
         new_data_list = [
             Data(id=ObjectId(), status=random.choice(list(DataStatus)), value=random.randint(0, 1_000_000)) for _ in range(10)
         ]
