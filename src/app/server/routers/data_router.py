@@ -9,12 +9,12 @@ router = APIRouter(prefix="/api/data", tags=["data"])
 
 
 @router.post("/generate-one")
-def generate_one(core: CoreDep) -> MongoInsertOneResult[ObjectId]:
+def generate_one(core: CoreDep) -> MongoInsertOneResult:
     return core.data_service.generate_one()
 
 
 @router.post("/generate-many")
-def generate_many(core: CoreDep) -> MongoInsertManyResult[ObjectId]:
+def generate_many(core: CoreDep) -> MongoInsertManyResult:
     return core.data_service.generate_many()
 
 
@@ -24,7 +24,7 @@ def get_data(core: CoreDep, id: ObjectId) -> Data:
 
 
 @router.post("/{id}/inc")
-def inc_data(core: CoreDep, id: ObjectId, value: int | None = None) -> MongoUpdateResult[ObjectId]:
+def inc_data(core: CoreDep, id: ObjectId, value: int | None = None) -> MongoUpdateResult:
     return core.db.data.update(id, {"$inc": {"value": value or 1}})
 
 

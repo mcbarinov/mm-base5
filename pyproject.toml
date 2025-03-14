@@ -1,10 +1,10 @@
 [project]
 name = "mm-base5"
-version = "0.0.8"
+version = "0.0.9"
 description = ""
 requires-python = ">=3.12"
 dependencies = [
-    "mm-mongo>=0.3.6",
+    "mm-mongo>=0.3.7",
     "mm-jinja~=0.0.4",
     "mm-telegram~=0.0.5",
     "pydantic-settings>=2.8.0",

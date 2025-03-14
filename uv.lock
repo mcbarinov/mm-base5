@@ -478,7 +478,7 @@ wheels = [
 
 [[package]]
 name = "mm-base5"
-version = "0.0.8"
+version = "0.0.9"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
@@ -505,7 +505,7 @@ requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.11" },
     { name = "itsdangerous", specifier = "~=2.2.0" },
     { name = "mm-jinja", specifier = "~=0.0.4" },
-    { name = "mm-mongo", specifier = ">=0.3.6" },
+    { name = "mm-mongo", specifier = ">=0.3.7" },
     { name = "mm-telegram", specifier = "~=0.0.5" },
     { name = "pydantic-settings", specifier = ">=2.8.0" },
 ]
@@ -534,14 +534,14 @@ wheels = [
 
 [[package]]
 name = "mm-mongo"
-version = "0.3.6"
+version = "0.3.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "mm-std" },
     { name = "pymongo" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/27/56/df740d1123215cb66dea824f1d57c05bd34c350fd96f31ebba6d01544908/mm_mongo-0.3.6-py3-none-any.whl", hash = "sha256:3a73ff0cb145399c9c73061b0a1ab4bfe749debf93c6b30585ca89c234e630b2", size = 6841 },
+    { url = "https://files.pythonhosted.org/packages/bb/bb/87b84f1566960ca79f6e3f08898d2ee81470db537c521ba55d4a6371f7c7/mm_mongo-0.3.7-py3-none-any.whl", hash = "sha256:30b4398eb826acdc0850829d8fc2bd4d99b809a4c45f8faa1f2bf075e35bab5c", size = 6831 },
 ]
 
 [[package]]

@@ -12,13 +12,13 @@ class DataService(AppService):
     def __init__(self, base_params: AppServiceParams) -> None:
         super().__init__(base_params)
 
-    def generate_one(self) -> MongoInsertOneResult[ObjectId]:
+    def generate_one(self) -> MongoInsertOneResult:
         status = random.choice(list(DataStatus))
         value = random.randint(0, 1_000_000)
 
         return self.db.data.insert_one(Data(id=ObjectId(), status=status, value=value))
 
-    def generate_many(self) -> MongoInsertManyResult[ObjectId]:
+    def generate_many(self) -> MongoInsertManyResult:
         res = hr("https://httpbin.org/get")
         self.dlog("generate_many", {"res": res.json, "large-data": "abc" * 100})
         self.dlog("ddd", self.dconfig.telegram_token)
